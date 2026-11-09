@@ -1,4 +1,5 @@
 #include "pc_hist_high_percentile_u32.h"
+#include <stddef.h>
 #include <assert.h>
 #include <stdint.h>
 

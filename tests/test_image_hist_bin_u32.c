@@ -1,4 +1,5 @@
 #include "pc_image_hist_bin_u32.h"
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #define CHECK(x) do { if (!(x)) return __LINE__; } while (0)

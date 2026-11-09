@@ -7,6 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: cmake -S . -B build -DESTIMORA_BUILD_TESTS=ON
+      - run: cmake -S . -B build -DESTIMORA_BUILD_TESTS=ON -DCMAKE_C_FLAGS="-Wall -Wextra -Werror"
       - run: cmake --build build --parallel
       - run: ctest --test-dir build --output-on-failure

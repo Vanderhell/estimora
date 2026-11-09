@@ -1,4 +1,5 @@
 #include "pc_hist_equalize_u8.h"
+#include <stddef.h>
 #include <assert.h>
 #include <stdint.h>
 

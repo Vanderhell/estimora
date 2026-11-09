@@ -1,4 +1,5 @@
 #include "pc_hist_valley_count_u32.h"
+#include <stddef.h>
 #include <assert.h>
 #include <stdint.h>
 

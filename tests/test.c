@@ -12,3 +12,4 @@ int main(void){pc_running_median3_i32_state s={{0,0,0},0,0,0},old;
  {pc_running_median3_i32_state bad={{0,0,0},0,0,4};CHECK(!pc_running_median3_i32(1,&bad));}
  {pc_running_median3_i32_state bad={{0,0,0},0,3,3};CHECK(!pc_running_median3_i32(1,&bad));}
  return 0;}
+#include <stddef.h>
