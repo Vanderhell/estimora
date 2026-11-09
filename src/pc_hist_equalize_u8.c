@@ -1,4 +1,4 @@
-#include "primitivecore/statistics/histogram/bounded/pc_hist_equalize_u8.h"
+#include "pc_hist_equalize_u8.h"
 #include <limits.h>
 #include <stddef.h>
 

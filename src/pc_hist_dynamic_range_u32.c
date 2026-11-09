@@ -1,4 +1,4 @@
-#include "primitivecore/statistics/histogram/bounded/pc_hist_dynamic_range_u32.h"
+#include "pc_hist_dynamic_range_u32.h"
 #include <stddef.h>
 
 bool pc_hist_dynamic_range_u32(const uint32_t histogram[256],

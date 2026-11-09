@@ -1,4 +1,4 @@
-#include <primitivecore/statistics/descriptive/streaming/pc_running_median3_i32.h>
+#include "pc_running_median3_i32.h"
 #include <stddef.h>
 static int32_t median3(int32_t a, int32_t b, int32_t c)
 {
@@ -27,4 +27,3 @@ bool rm_running_median3_i32(int32_t sample, rm_running_median3_i32_state *state)
     }
     return true;
 }
-

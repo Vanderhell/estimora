@@ -1,4 +1,4 @@
-#include "primitivecore/statistics/descriptive/pc_median_network7_i32.h"
+#include "pc_median_network7_i32.h"
 
 #define ASC(i, j) do { if (x[i] > x[j]) { int32_t t=x[i]; x[i]=x[j]; x[j]=t; } } while (0)
 

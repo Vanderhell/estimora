@@ -1,4 +1,4 @@
-#include "primitivecore/statistics/histogram/bounded/pc_hist_entropy_norm_q.h"
+#include "pc_hist_entropy_norm_q.h"
 #include <stddef.h>
 
 #define LOG_FRAC_BITS 24u

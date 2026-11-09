@@ -1,4 +1,4 @@
-#include "../include/pc_hist_low_percentile_u32.h"
+#include "pc_hist_low_percentile_u32.h"
 #include <assert.h>
 #include <stdint.h>
 

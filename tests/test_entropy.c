@@ -1,4 +1,4 @@
-#include "../include/pc_hist_entropy_norm_q.h"
+#include "pc_hist_entropy_norm_q.h"
 #include <assert.h>
 #include <math.h>
 #include <stdint.h>

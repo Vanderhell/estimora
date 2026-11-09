@@ -1,4 +1,4 @@
-#include "../include/pc_hist_equalize_u8.h"
+#include "pc_hist_equalize_u8.h"
 #include <assert.h>
 #include <stdint.h>
 

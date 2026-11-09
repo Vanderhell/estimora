@@ -1,4 +1,4 @@
-#include "../include/pc_running_median3_i32.h"
+#include "pc_running_median3_i32.h"
 #include <limits.h>
 #define CHECK(e) do { if (!(e)) return __LINE__; } while (0)
 int main(void){pc_running_median3_i32_state s={{0,0,0},0,0,0},old;

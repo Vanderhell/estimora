@@ -1,5 +1,5 @@
-#include "primitivecore/statistics/descriptive/pc_trimmed_mean5_i32.h"
-#include "primitivecore/statistics/descriptive/pc_mean3_i32.h"
+#include "pc_trimmed_mean5_i32.h"
+#include "pc_mean3_i32.h"
 
 static void sort5(int32_t x[5])
 {

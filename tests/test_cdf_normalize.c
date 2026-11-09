@@ -1,5 +1,5 @@
 #include "../include/pc_hist_cdf_normalize_q.h"
-#include "roundmath/pc_hist_cdf_u32.h"
+#include "pc_hist_cdf_u32.h"
 #include <assert.h>
 #include <stdint.h>
 

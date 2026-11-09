@@ -1,4 +1,4 @@
-#include "primitivecore/statistics/descriptive/pc_median_network5_i32.h"
+#include "pc_median_network5_i32.h"
 
 #define ASC(x, y) do { if ((x) > (y)) { int32_t t=(x); (x)=(y); (y)=t; } } while (0)
 

@@ -1,4 +1,4 @@
-#include "primitivecore/utility/general/bounded/pc_image_hist_bin_u32.h"
+#include "pc_image_hist_bin_u32.h"
 #include <stddef.h>
 
 bool pc_image_hist_bin_u32(uint8_t value, uint32_t bin_count, uint32_t *bin)

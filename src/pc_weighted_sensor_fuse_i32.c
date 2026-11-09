@@ -1,4 +1,4 @@
-#include <primitivecore/statistics/descriptive/moments/pc_weighted_sensor_fuse_i32.h>
+#include "pc_weighted_sensor_fuse_i32.h"
 #include <limits.h>
 
 bool rm_weighted_sensor_fuse_i32(int32_t value0, uint32_t weight0,
