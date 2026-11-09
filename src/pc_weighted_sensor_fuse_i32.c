@@ -1,7 +1,7 @@
 #include "pc_weighted_sensor_fuse_i32.h"
 #include <limits.h>
 
-bool rm_weighted_sensor_fuse_i32(int32_t value0, uint32_t weight0,
+bool pc_weighted_sensor_fuse_i32(int32_t value0, uint32_t weight0,
                                  int32_t value1, uint32_t weight1,
                                  int32_t *out)
 {

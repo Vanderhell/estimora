@@ -14,8 +14,8 @@ static uint32_t phase_distance(uint32_t a, uint32_t b)
 
 int main(void)
 {
-    uint32_t phases[RM_CIRCULAR_WEIGHTED_MEAN_Q_MAX_COUNT] = { 0u };
-    uint16_t weights[RM_CIRCULAR_WEIGHTED_MEAN_Q_MAX_COUNT] = { 0u };
+    uint32_t phases[PC_CIRCULAR_WEIGHTED_MEAN_Q_MAX_COUNT] = { 0u };
+    uint16_t weights[PC_CIRCULAR_WEIGHTED_MEAN_Q_MAX_COUNT] = { 0u };
     pc_circular_weighted_mean_q_result out = { 17u, 19u };
     unsigned i;
     uint32_t state = UINT32_C(0x91e10da5);
@@ -70,7 +70,7 @@ int main(void)
     }
 
     for (i = 0u; i < 10000u; ++i) {
-        uint8_t count = (uint8_t)(1u + i % RM_CIRCULAR_WEIGHTED_MEAN_Q_MAX_COUNT);
+        uint8_t count = (uint8_t)(1u + i % PC_CIRCULAR_WEIGHTED_MEAN_Q_MAX_COUNT);
         uint8_t j;
         uint32_t rotation;
         pc_circular_weighted_mean_q_result base;

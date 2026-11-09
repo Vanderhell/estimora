@@ -1,5 +1,5 @@
-#ifndef PRIMITIVECORE_PC_IMAGE_HIST_BIN_U32_H
-#define PRIMITIVECORE_PC_IMAGE_HIST_BIN_U32_H
+#ifndef PC_PC_IMAGE_HIST_BIN_U32_H
+#define PC_PC_IMAGE_HIST_BIN_U32_H
 #include <stdbool.h>
 #include <stdint.h>
 /* Uniformly map a uint8 sample over [0,256) to one of bin_count bins.

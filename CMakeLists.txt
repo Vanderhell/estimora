@@ -18,7 +18,7 @@ if(ESTIMORA_BUILD_TESTS)
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_high_percentile.c
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_percentile.c
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_redistribute.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_rm_image_hist_bin_u32.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_image_hist_bin_u32.c
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_valleys.c
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_weighted_sensor_fuse.c)
  foreach(test_source IN LISTS ESTIMORA_TESTS)

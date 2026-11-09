@@ -1,6 +1,6 @@
 #include "pc_histogram_total_u32.h"
 
-bool rm_histogram_total_u32(const uint32_t *bins, size_t bin_count,
+bool pc_histogram_total_u32(const uint32_t *bins, size_t bin_count,
                             uint32_t *total_out)
 {
     uint32_t total = 0u;

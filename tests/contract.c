@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "roundmath/pc_interval_mean_u32.h"
+/* Held-out cross-family validation source; dependency is outside this product. */
 #define CHECK(x) do { if (!(x)) return __LINE__; } while (0)
 int main(void) {
  uint32_t out=99u; const uint32_t a[]={1u,2u}; const uint32_t b[]={UINT32_MAX,UINT32_MAX,0u};

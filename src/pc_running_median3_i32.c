@@ -8,7 +8,7 @@ static int32_t median3(int32_t a, int32_t b, int32_t c)
     if (a > b) { t=a; a=b; b=t; }
     return b;
 }
-bool rm_running_median3_i32(int32_t sample, rm_running_median3_i32_state *state)
+bool pc_running_median3_i32(int32_t sample, pc_running_median3_i32_state *state)
 {
     if (state == NULL || state->count > 3u || state->next > 2u ||
         (state->count < 3u && state->next != state->count)) return false;
