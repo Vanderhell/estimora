@@ -1,0 +1,6 @@
+#include "pc_weighted_slot_u32.h"
+#include <assert.h>
+#include <stdint.h>
+int main(void){uint32_t v[6],count,n,code,i,slot;for(n=1;n<=6u;++n){uint32_t maps=1u;for(i=0;i<n;++i)maps*=3u;for(code=0;code<maps;++code){uint32_t q=code,total=0;for(i=0;i<n;++i){v[i]=q%3u;q/=3u;total+=v[i];}if(total==0u)continue;for(count=0;count<total;++count){uint32_t prefix=0;for(i=0;i<n;++i){prefix+=v[i];if(count<prefix)break;}slot=99u;assert(pc_weighted_slot_u32(v,n,count,&slot)&&slot==i);}slot=77;assert(!pc_weighted_slot_u32(v,n,total,&slot)&&slot==77);}}
+ {uint32_t z[2]={0,0},ov[2]={UINT32_MAX,1},one[1]={1},maxw[1]={UINT32_MAX};slot=77;assert(!pc_weighted_slot_u32(z,2,0,&slot)&&slot==77);assert(!pc_weighted_slot_u32(ov,2,0,&slot)&&slot==77);assert(!pc_weighted_slot_u32(one,1,1,&slot)&&slot==77);assert(pc_weighted_slot_u32(maxw,1,UINT32_MAX-1u,&slot)&&slot==0);slot=77;assert(!pc_weighted_slot_u32(maxw,1,UINT32_MAX,&slot)&&slot==77);assert(!pc_weighted_slot_u32(one,0,0,&slot));assert(!pc_weighted_slot_u32(one,1,0,0));assert(!pc_weighted_slot_u32(0,1,0,&slot));}
+ return 0;}

@@ -1,0 +1,7 @@
+#include <assert.h>
+#include <stdint.h>
+#include <stdio.h>
+#include "../include/remove_mean_i32.h"
+static uint32_t state=0x1047a55au;static uint32_t next(void){state^=state<<13;state^=state>>17;state^=state<<5;return state;}
+static int verify(const int32_t *x,uint32_t n){int64_t y[40];int32_t mean=77;if(n>40)return 1;if(!pc_remove_mean_i32_experiment(x,n,y,&mean))return 2;for(uint32_t i=0;i<n;i++)if(y[i]!=(int64_t)x[i]-mean)return 3;return 0;}
+int main(void){int32_t x[40];uint32_t checked=0;for(uint32_t n=1;n<=4;n++){uint32_t combos=1;for(uint32_t i=0;i<n;i++)combos*=5;for(uint32_t k=0;k<combos;k++){uint32_t q=k;for(uint32_t i=0;i<n;i++){x[i]=(int32_t)(q%5)-2;q/=5;}if(verify(x,n))return 1;checked++;}}const int32_t edges[][4]={{INT32_MIN},{INT32_MAX},{INT32_MIN,INT32_MAX},{INT32_MIN,INT32_MIN,INT32_MAX,INT32_MAX},{1,0,0,0}};const uint32_t lens[]={1,1,2,4,4};for(unsigned k=0;k<5;k++){if(verify(edges[k],lens[k]))return 2;checked++;}for(unsigned k=0;k<100000;k++){uint32_t n=1u+next()%40u;for(uint32_t i=0;i<n;i++)x[i]=(int32_t)next();if(verify(x,n))return 3;checked++;}int64_t out=88;int32_t mean=77;if(pc_remove_mean_i32_experiment(NULL,1,&out,&mean)||out!=88||mean!=77)return 4;if(pc_remove_mean_i32_experiment(x,0,&out,&mean)||out!=88||mean!=77)return 5;if(pc_remove_mean_i32_experiment(x,1,NULL,&mean)||mean!=77)return 6;if(pc_remove_mean_i32_experiment(x,1,&out,NULL)||out!=88)return 7;printf("PASS %u exhaustive-small/edge/random arrays plus invalid arguments\\n",checked);return 0;}

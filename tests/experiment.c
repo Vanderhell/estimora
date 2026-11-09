@@ -1,0 +1,4 @@
+#include <stdint.h>
+#include <stdio.h>
+#include "../include/pc_probability_cross_entropy_binary_q.h"
+int main(void){uint32_t v[]={0,1,2,16384,32768,49152,65534,65535,65536};for(unsigned i=0;i<9;i++)for(unsigned j=0;j<9;j++){uint32_t o=77;int ok=pc_probability_cross_entropy_binary_q(v[i],v[j],&o);int impossible=(v[i]&&j==0)||(v[i]<65536u&&j==8);if(ok==impossible)return 1;if(ok&&o>800000u)return 2;}uint32_t o=99;if(pc_probability_cross_entropy_binary_q(65537,0,&o)||o!=99||pc_probability_cross_entropy_binary_q(0,65537,&o)||o!=99||pc_probability_cross_entropy_binary_q(0,0,NULL))return 3;puts("9x9 probability grid, impossible evidence, invalid preservation PASS");}
