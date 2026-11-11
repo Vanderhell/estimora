@@ -41,7 +41,7 @@ static void compare(unsigned f)
                             0.5L / (long double)(UINT64_C(1) << f) + 1.0e-12L;
     long double error = fabsl(value - exact_reference());
     if (f == 31u && error > max_abs_error) max_abs_error = error;
-    if (error > tolerance) {
+    if (!(error <= tolerance)) {
         (void)fprintf(stderr, "entropy mismatch case=%lu f=%u q=%u error=%.12g tolerance=%.12g\n",
                       (unsigned long)case_index, f, (unsigned int)q,
                       (double)error, (double)tolerance);
