@@ -1,3 +1,6 @@
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
 #include "pc_hist_entropy_norm_q.h"
 #include <stddef.h>
 #include <assert.h>

@@ -35,6 +35,7 @@ For a minimal integration, include only the required public header and compile t
 | Reproduce tests and see validation limits | [Testing report](docs/TESTING.md) |
 | Review design and dependencies | [Architecture](docs/ARCHITECTURE.md) |
 | See measured or pending performance data | [Performance](docs/PERFORMANCE.md) |
+| Review source findings and API status | [Audit register](docs/AUDIT.md) |
 
 ## At a glance
 
@@ -44,8 +45,9 @@ The CMake test option is ESTIMORA_BUILD_TESTS. The library has no mandatory thir
 
 ## Validation status
 
-13/13 MSVC tests and 13/13 GCC strict-warning tests passed.
-See docs/TESTING.md for reproducible commands, coverage boundaries and hardware status.
+All 19 public functions have direct deterministic tests. GCC, Clang and MSVC Debug/Release host builds passed 14/14 CTest targets per configuration. GCC ASan and UBSan checks are configured in GitHub Actions; their final remote results are recorded in the audit report.
+
+ESP32-S3 validation firmware reported `ESTIMORA_ALL19_PASS`. The board revision, per-API cycle observations and clearly separated whole-firmware and library-object footprint are recorded in [Performance](docs/PERFORMANCE.md). Stack bounds remain unmeasured.
 
 Detailed overflow, rounding, invalid-input, memory-ownership and state rules are defined by the public headers and API reference. Do not infer them from the product name alone.
 

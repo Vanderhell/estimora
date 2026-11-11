@@ -1,3 +1,6 @@
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
 #include "pc_hist_dynamic_range_u32.h"
 #include <stddef.h>
 #include <assert.h>

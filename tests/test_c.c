@@ -1,3 +1,6 @@
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
 #include "pc_mean5_i32.h"
 #include <assert.h>
 #include <stdint.h>

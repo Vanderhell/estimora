@@ -1,330 +1,36 @@
-﻿# Estimora API reference
-
-This reference explains every public header in the Estimora product. It is generated from the current headers and test sources; the header remains authoritative when a detail conflicts.
-
-## Reading the entries
-Each entry states the public symbol, implementation unit, contract, edge/failure behavior and a call extracted from the validating test source. The examples are evidence-oriented; adapt buffer ownership and numeric units to the application.
-
-## include/estimora/statistics/pc_hist_cdf_u32.h
-
-**Public symbol:** pc_hist_cdf_u32
-
-**Implementation unit:** src/pc_hist_cdf_u32.c
-
-**Purpose and contract:** Write raw cumulative counts: cdf[i] = sum(bins[0..i]). The output may exactly alias bins or be disjoint; partial overlap is not supported. Empty input succeeds without dereferencing either pointer. Failure leaves output unchanged.
-
-**Validation source:** tests/test_cdf_normalize.c
-
-**Test-derived call:**
-```c
-pc_hist_cdf_u32(raw_bins, 3u, raw_cdf\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_hist_clip_redistribute_u32.h
-
-**Public symbol:** pc_hist_clip_redistribute_u32
-
-**Implementation unit:** src/pc_hist_clip_redistribute_u32.c
-
-**Purpose and contract:** Clip 256 bins at a positive absolute limit, then redistribute excess uniformly. Residual counts go to the lowest bin indices. Exact alias is allowed; failure leaves output unchanged.
-
-**Validation source:** tests/test_redistribute.c
-
-**Test-derived call:**
-```c
-pc_hist_clip_redistribute_u32(h, limit, out\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_hist_dynamic_range_u32.h
-
-**Public symbol:** pc_hist_dynamic_range_u32
-
-**Implementation unit:** src/pc_hist_dynamic_range_u32.c
-
-**Purpose and contract:** Return highest occupied bin minus lowest occupied bin in a 256-bin histogram. Empty input fails and leaves range_out unchanged.
-
-**Validation source:** tests/test_dynamic_range.c
-
-**Test-derived call:**
-```c
-pc_hist_dynamic_range_u32(NULL, &range\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_hist_entropy_norm_q.h
-
-**Public symbol:** pc_hist_entropy_norm_q
-
-**Implementation unit:** src/pc_hist_entropy_norm_q.c
-
-**Purpose and contract:** Approximate normalized Shannon entropy of all 256 byte-intensity bins. Q output uses caller fractional_bits 0..31; error from exact entropy / 8 is <= 2^-18 + 0.5*2^-fractional_bits. Failure preserves output.
-
-**Validation source:** tests/test_entropy.c
-
-**Test-derived call:**
-```c
-pc_hist_entropy_norm_q(h, f, &q\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_hist_equalize_u8.h
-
-**Public symbol:** pc_hist_equalize_u8
-
-**Implementation unit:** src/pc_hist_equalize_u8.c
-
-**Purpose and contract:** Build a 256-entry grayscale equalization LUT from raw uint32 histogram counts. Uses CDF-min normalization and round-nearest-even. A single-level histogram produces the identity LUT. Histogram and LUT storage must not overlap. Failure leaves lut_out unchanged.
-
-**Validation source:** tests/test_equalize.c
-
-**Test-derived call:**
-```c
-pc_hist_equalize_u8(h, lut\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_hist_high_percentile_u32.h
-
-**Public symbol:** pc_hist_high_percentile_u32
-
-**Implementation unit:** src/pc_hist_high_percentile_u32.c
-
-**Purpose and contract:** Upper-tail nearest-rank percentile of a 256-bin histogram. Percent is 0..100; zero selects the maximum occupied bin. Failure preserves output.
-
-**Validation source:** tests/test_high_percentile.c
-
-**Test-derived call:**
-```c
-pc_hist_high_percentile_u32(h, 0u, &bin\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_hist_low_percentile_u32.h
-
-**Public symbol:** pc_hist_low_percentile_u32
-
-**Implementation unit:** src/pc_hist_low_percentile_u32.c
-
-**Purpose and contract:** Nearest-rank percentile of a 256-bin histogram. Percent is 0..100; zero selects the minimum occupied bin. Failure leaves bin_out unchanged.
-
-**Validation source:** tests/test_percentile.c
-
-**Test-derived call:**
-```c
-pc_hist_low_percentile_u32(h, 0u, &bin\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_hist_valley_count_u32.h
-
-**Public symbol:** pc_hist_valley_count_u32
-
-**Implementation unit:** src/pc_hist_valley_count_u32.c
-
-**Purpose and contract:** Count interior local-minimum plateaus in a fixed 256-bin histogram. A plateau counts once only when both adjacent bins are strictly higher.
-
-**Validation source:** tests/test_valleys.c
-
-**Test-derived call:**
-```c
-pc_hist_valley_count_u32(h, &got\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_histogram_total_u32.h
-
-**Public symbol:** pc_histogram_total_u32
-
-**Implementation unit:** src/pc_histogram_total_u32.c
-
-**Purpose and contract:** Sum count bins without wrapping. A zero-length histogram has total zero and may use a null bins pointer. Returns false for null output, a null nonempty input, or U32 overflow; failure preserves a nonnull output value.
-
-**Validation source:** No enabled test source was found by symbol search.
-
-**Test-derived call:**
-```c
-No test-derived call was found.;
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_image_hist_bin_u32.h
-
-**Public symbol:** pc_image_hist_bin_u32
-
-**Implementation unit:** src/pc_image_hist_bin_u32.c
-
-**Purpose and contract:** Uniformly map a uint8 sample over [0,256) to one of bin_count bins. False for null output or bin_count==0; failure preserves *bin.
-
-**Validation source:** tests/test_image_hist_bin_u32.c
-
-**Test-derived call:**
-```c
-pc_image_hist_bin_u32(0u,0u,&out)&&out==99u);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_mean3_i32.h
-
-**Public symbol:** pc_mean3_i32
-
-**Implementation unit:** src/pc_mean3_i32.c
-
-**Purpose and contract:** Exact arithmetic mean of three int32 values, rounded to nearest integer.
-
-**Validation source:** No enabled test source was found by symbol search.
-
-**Test-derived call:**
-```c
-No test-derived call was found.;
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_mean4_i32.h
-
-**Public symbol:** pc_mean4_i32
-
-**Implementation unit:** src/pc_mean4_i32.c
-
-**Purpose and contract:** Exact arithmetic mean of four int32 values, rounded nearest-even.
-
-**Validation source:** No enabled test source was found by symbol search.
-
-**Test-derived call:**
-```c
-No test-derived call was found.;
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_mean5_i32.h
-
-**Public symbol:** pc_mean5_i32
-
-**Implementation unit:** src/pc_mean5_i32.c
-
-**Purpose and contract:** Exact arithmetic mean of five int32 values, rounded to nearest integer.
-
-**Validation source:** tests/test_c.c
-
-**Test-derived call:**
-```c
-pc_mean5_i32(INT32_MIN,INT32_MIN,INT32_MIN,INT32_MIN,INT32_MIN)==INT32_MIN);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_median_network5_i32.h
-
-**Public symbol:** pc_median_network5_i32
-
-**Implementation unit:** src/pc_median_network5_i32.c
-
-**Purpose and contract:** Return the middle order statistic of five int32 values using 7 comparators.
-
-**Validation source:** tests/test_median5.c
-
-**Test-derived call:**
-```c
-pc_median_network5_i32(INT32_MIN,INT32_MAX,0,INT32_MIN,INT32_MAX)==0);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_median_network7_i32.h
-
-**Public symbol:** pc_median_network7_i32
-
-**Implementation unit:** src/pc_median_network7_i32.c
-
-**Purpose and contract:** Return the middle order statistic of seven int32 values using 14 comparators.
-
-**Validation source:** tests/test_median7.c
-
-**Test-derived call:**
-```c
-pc_median_network7_i32(v[0],v[1],v[2],v[3],v[4],v[5],v[6])==oracle(v\);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_running_median3_i32.h
-
-**Public symbol:** pc_running_median3_i32
-
-**Implementation unit:** src/pc_running_median3_i32.c
-
-**Purpose and contract:** Zero-initialize state. First two outputs pass through; thereafter median is the last-three median.
-
-**Validation source:** tests/test.c
-
-**Test-derived call:**
-```c
-pc_running_median3_i32(INT32_MIN,&s)&&s.median==INT32_MIN&&s.count==1);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_sensor_triple_median_i32.h
-
-**Public symbol:** pc_sensor_triple_median_i32
-
-**Implementation unit:** src/pc_sensor_triple_median_i32.c
-
-**Purpose and contract:** Stateless median of three simultaneous signed sensor values.
-
-**Validation source:** tests/test_edge_grid.c
-
-**Test-derived call:**
-```c
-pc_sensor_triple_median_i32(x[i],x[j],x[k]);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_trimmed_mean5_i32.h
-
-**Public symbol:** pc_trimmed_mean5_i32
-
-**Implementation unit:** src/pc_trimmed_mean5_i32.c
-
-**Purpose and contract:** Drop one minimum and maximum, then round the mean of the middle three.
-
-**Validation source:** tests/test_trimmed_mean.c
-
-**Test-derived call:**
-```c
-pc_trimmed_mean5_i32(INT32_MIN,INT32_MIN,0,INT32_MAX,INT32_MAX)==0);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
-## include/estimora/statistics/pc_weighted_sensor_fuse_i32.h
-
-**Public symbol:** pc_weighted_sensor_fuse_i32
-
-**Implementation unit:** src/pc_weighted_sensor_fuse_i32.c
-
-**Purpose and contract:** Fuse two signed measurements by nonnegative relative weights <= INT32_MAX. Rounds the exact weighted mean to nearest, ties away from zero. Both weights zero or a null output pointer returns false without changing *out.
-
-**Validation source:** tests/test_weighted_sensor_fuse.c
-
-**Test-derived call:**
-```c
-pc_weighted_sensor_fuse_i32(1,0,2,0,&out)&&out==777);
-```
-
-**Integration notes:** use the exact fixed-width types and units shown in the declaration; check the boolean/status return before consuming an output pointer; do not assume overlap, rounding or overflow behavior beyond the contract above.
-
+# API reference
+
+All functions are declared in `include/estimora/statistics/` and implemented as standalone C translation units in `src/`. Fixed-size histogram APIs read exactly 256 bins. No function allocates memory or depends on an operating system. The header comments and declarations are authoritative.
+
+## Histogram and image operations
+
+| API | Purpose and input range | Output, rounding, and failure contract | Direct audit coverage |
+|---|---|---|---|
+| `pc_histogram_total_u32(bins, bin_count, total_out)` | Sum `bin_count` readable `uint32_t` entries; any `size_t` count is allowed. A null `bins` is valid only for count zero. | Exact sum; returns false on sum above `UINT32_MAX` or null output. Failure preserves `*total_out`. Count zero writes zero. | 100,000 seeded vectors, empty/null, max count, overflow and output alias. |
+| `pc_hist_cdf_u32(bins, bin_count, cdf_out)` | Raw cumulative counts; total must fit `uint32_t`. | Exact prefix sums. Empty count succeeds without dereferencing pointers. Exact in-place alias or disjoint buffers are supported; partial overlap is unsupported. Failure preserves output. | 100,000 seeded histograms, exact totals, monotonicity, empty input, overflow, in-place and failure preservation. |
+| `pc_hist_clip_redistribute_u32(histogram, limit, output)` | Exactly 256 bins; `limit` must be positive. | Counts above limit are clipped. Removed counts are spread evenly over 256 bins; remainder goes to lowest indices. Exact alias supported; failure preserves output. Redistribution may make final bins exceed the clip limit. | 100,000 histograms, conservation, exact expected distribution, exact alias and invalid-input preservation. |
+| `pc_hist_dynamic_range_u32(histogram, range_out)` | Exactly 256 bins; at least one count must be nonzero. | Highest occupied index minus lowest occupied index. Empty histogram or null pointer fails and preserves output. | 100,000 histograms plus empty/null and endpoint cases. |
+| `pc_hist_entropy_norm_q(histogram, fractional_bits, entropy_q)` | Exactly 256 `uint32_t` bins; `fractional_bits` is 0 through 31 and total must be nonzero. | Approximate Shannon entropy divided by 8, represented as unsigned Q with the requested fractional bits; final result is clamped to `[0, 1]`. Error versus exact normalized entropy is bounded by `2^-18 + 0.5*2^-fractional_bits`. Null/empty/invalid precision fails and preserves output. | 100,000 seeded two-bin distributions checked against independent `log2`, plus empty, one-bin, uniform and maximum-bin histograms. The measured maximum on the seeded host sample is recorded in `docs/TESTING.md`. |
+| `pc_hist_equalize_u8(histogram, lut_out)` | Exactly 256 bins; total must be in `1..UINT32_MAX`. Input storage must not overlap the 256-byte output LUT. | CDF-min grayscale equalization with nearest-even integer rounding. A histogram with one occupied intensity produces identity LUT. Invalid/overflow input fails and preserves the LUT. | 100,000 seeded histograms compared entry-by-entry with independent integer arithmetic; monotonicity, single-level case, overflow and failures. |
+| `pc_hist_low_percentile_u32(histogram, percent, bin_out)` | Exactly 256 bins, nonzero total, `percent` in `0..100`. | Lower-tail nearest-rank selection. `0` selects the lowest occupied bin; `100` the highest. Invalid/empty input fails and preserves output. | 100,000 seeded histograms with independent widened cumulative-rank reference; exact 0/100 and invalid-input checks. |
+| `pc_hist_high_percentile_u32(histogram, percent, bin_out)` | Exactly 256 bins, nonzero total, `percent` in `0..100`. | Upper-tail nearest-rank selection. `0` selects the highest occupied bin; `100` the lowest. Invalid/empty input fails and preserves output. | 100,000 seeded histograms with independent widened cumulative-rank reference; exact 0/100 and invalid-input checks. |
+| `pc_hist_valley_count_u32(histogram, valley_count)` | Exactly 256 bins. | Counts interior local-minimum plateaus once when both adjacent levels are strictly greater. Null input/output fails and preserves nonnull output. | 100,000 seeded histograms checked against a separately written plateau scan, plus plateau, boundary and null cases. |
+| `pc_image_hist_bin_u32(value, bin_count, bin)` | `value` is any `uint8_t`; `bin_count` is any nonzero `uint32_t`. | `floor(value * bin_count / 256)` using widened unsigned arithmetic. Null output or zero bin count fails and preserves output. | 100,000 seeded values/counts, maximum count and invalid-input preservation. |
+
+## Means and medians
+
+All scalar inputs below span the full `int32_t` range. These functions cannot fail because they have no pointer parameters.
+
+| API | Purpose and rounding | Direct audit coverage |
+|---|---|---|
+| `pc_mean3_i32(a,b,c)` | Arithmetic mean rounded to nearest; integer remainder ties are rounded away from zero. For an odd denominator, an exact half-integer cannot occur for integer inputs. | 100,000 full-width inputs vs widened `int64_t`/long-double reference, permutations, negative values and extremes. |
+| `pc_mean4_i32(a,b,c,d)` | Arithmetic mean rounded nearest-even. | 100,000 full-width inputs vs exact widened reference, positive/negative ties, permutations and extremes. |
+| `pc_mean5_i32(a,b,c,d,e)` | Arithmetic mean rounded to nearest; integer remainder ties are rounded away from zero. | 100,000 full-width inputs vs widened `int64_t`/long-double reference, permutations, negative values and extremes. |
+| `pc_median_network5_i32(a,b,c,d,e)` | Middle order statistic of five values; no arithmetic averaging or rounding. | 100,000 seeded full-width vectors compared with an independent insertion sort; extrema and repeated values. |
+| `pc_median_network7_i32(a,b,c,d,e,f,g)` | Middle order statistic of seven values. | 100,000 seeded full-width vectors compared with independent insertion sort; extrema and repeated values. |
+| `pc_sensor_triple_median_i32(value0,value1,value2)` | Stateless median of three signed values. | 100,000 seeded full-width triples compared with independent insertion sort; permutations and extrema. |
+| `pc_trimmed_mean5_i32(a,b,c,d,e)` | Sort five values, discard one minimum and maximum, then use `pc_mean3_i32` rounding for the center three. | 100,000 seeded full-width vectors compared with independent sort and widened arithmetic; permutations and extrema. |
+| `pc_running_median3_i32(sample,state)` | Stateful median over the most recent three samples. A zero-initialized state passes through its first two samples, then returns the median of the last three. | 100,000-sample deterministic sequence compared with independent rolling history, initialization, wraparound, malformed state and null checks. |
+| `pc_weighted_sensor_fuse_i32(value0,weight0,value1,weight1,out)` | Nonnegative weights each at most `INT32_MAX`; their sum must be nonzero. Exact weighted mean rounded nearest, ties away from zero. | 100,000 deterministic full-width values/weights against widened reference, zero and asymmetric weights, extreme weights, ties and output preservation. |
+
+The deterministic test source is `tests/test_audit.c`. Its references use widened sums, insertion sort, independent cumulative arithmetic, or the standard library logarithm; they do not call the tested implementation to produce expected values. See [Testing](TESTING.md) for build results and limits.

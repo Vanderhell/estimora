@@ -1,3 +1,6 @@
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
 #include "pc_hist_clip_redistribute_u32.h"
 #include <stddef.h>
 #include <assert.h>

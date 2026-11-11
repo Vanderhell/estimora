@@ -1,12 +1,60 @@
 name: estimora-ci
+
 on:
   push:
   pull_request:
+
 jobs:
-  host:
-    runs-on: ubuntu-latest
+  gcc-clang:
+    name: ${{ matrix.compiler }} / ${{ matrix.configuration }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+        configuration: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - run: cmake -S . -B build -DESTIMORA_BUILD_TESTS=ON -DCMAKE_C_FLAGS="-Wall -Wextra -Werror"
-      - run: cmake --build build --parallel
-      - run: ctest --test-dir build --output-on-failure
+      - name: Configure strict C99
+        run: cmake -S . -B build -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DESTIMORA_BUILD_TESTS=ON -DESTIMORA_STRICT_WARNINGS=ON
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  sanitizers:
+    name: GCC ${{ matrix.sanitizer }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [address, undefined]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure with sanitizer
+        env:
+          SANITIZER: ${{ matrix.sanitizer }}
+        run: cmake -S . -B build -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Debug -DESTIMORA_BUILD_TESTS=ON -DESTIMORA_STRICT_WARNINGS=ON -DCMAKE_C_FLAGS="-fsanitize=${SANITIZER} -fno-omit-frame-pointer" -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=${SANITIZER}"
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        env:
+          ASAN_OPTIONS: detect_leaks=1:strict_string_checks=1
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+        run: ctest --test-dir build --output-on-failure
+
+  msvc:
+    name: MSVC ${{ matrix.configuration }}
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure strict C99
+        run: cmake -S . -B build -DESTIMORA_BUILD_TESTS=ON -DESTIMORA_STRICT_WARNINGS=ON
+      - name: Build
+        run: cmake --build build --config ${{ matrix.configuration }} --parallel
+      - name: Test
+        run: ctest --test-dir build -C ${{ matrix.configuration }} --output-on-failure
