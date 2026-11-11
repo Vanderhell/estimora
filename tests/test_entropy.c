@@ -36,9 +36,9 @@ static void compare(unsigned f)
 {
     uint32_t q = UINT32_MAX;
     assert(pc_hist_entropy_norm_q(h, f, &q));
-    long double value = (long double)q / (long double)(UINT64_C(1) << f);
-    long double tolerance = 1.0L / 262144.0L +
-                            0.5L / (long double)(UINT64_C(1) << f) + 1.0e-12L;
+    long double scale = ldexpl(1.0L, (int)f);
+    long double value = (long double)q / scale;
+    long double tolerance = 1.0L / 262144.0L + 0.5L / scale + 1.0e-12L;
     long double error = fabsl(value - exact_reference());
     if (f == 31u && error > max_abs_error) max_abs_error = error;
     if (!(error <= tolerance)) {
