@@ -11,6 +11,7 @@
 static uint32_t h[256];
 static uint32_t state = UINT32_C(0x4456E17A);
 static long double max_abs_error;
+static size_t case_index;
 
 static uint32_t next_u32(void)
 {
@@ -40,6 +41,16 @@ static void compare(unsigned f)
                             0.5L / (long double)(UINT64_C(1) << f) + 1.0e-12L;
     long double error = fabsl(value - exact_reference());
     if (f == 31u && error > max_abs_error) max_abs_error = error;
+    if (error > tolerance) {
+        (void)fprintf(stderr, "entropy mismatch case=%lu f=%u q=%u error=%.12g tolerance=%.12g\n",
+                      (unsigned long)case_index, f, (unsigned int)q,
+                      (double)error, (double)tolerance);
+        for (size_t i = 0u; i < 256u; ++i)
+            if (h[i] != 0u)
+                (void)fprintf(stderr, "%lu:%u ", (unsigned long)i,
+                              (unsigned int)h[i]);
+        (void)fputc('\n', stderr);
+    }
     assert(error <= tolerance);
     assert(q <= (UINT32_C(1) << f));
 }
@@ -76,6 +87,7 @@ int main(void)
     assert(original <= scaled + 2u && scaled <= original + 2u);
 
     for (size_t k = 0u; k < 2000u; ++k) {
+        case_index = k;
         for (size_t i = 0u; i < 256u; ++i)
             h[i] = (next_u32() % 4u == 0u) ? 0u : next_u32();
         if (k % 4u == 0u) h[k % 256u] = UINT32_MAX;
