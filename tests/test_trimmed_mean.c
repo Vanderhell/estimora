@@ -1,4 +1,7 @@
-#include "trimmed_mean5_i32.h"
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#include <estimora/statistics/trimmed_mean5_i32.h>
 #include <assert.h>
 #include <limits.h>
 #include <stdint.h>
@@ -15,13 +18,13 @@ static int32_t oracle(int32_t a,int32_t b,int32_t c,int32_t d,int32_t e){
     return (int32_t)q;
 }
 int main(void){int32_t a,b,c,d,e,i,j,k,l,m;
-    assert(pc_trimmed_mean5_i32(INT32_MIN,INT32_MIN,0,INT32_MAX,INT32_MAX)==0);
-    assert(pc_trimmed_mean5_i32(0,1,2,3,100)==2);
-    assert(pc_trimmed_mean5_i32(-100,0,1,2,3)==1);
+    assert(estimora_trimmed_mean5_i32(INT32_MIN,INT32_MIN,0,INT32_MAX,INT32_MAX)==0);
+    assert(estimora_trimmed_mean5_i32(0,1,2,3,100)==2);
+    assert(estimora_trimmed_mean5_i32(-100,0,1,2,3)==1);
     for(i=-4;i<=4;++i)for(j=-4;j<=4;++j)for(k=-4;k<=4;++k)
     for(l=-4;l<=4;++l)for(m=-4;m<=4;++m)
-        assert(pc_trimmed_mean5_i32(i,j,k,l,m)==oracle(i,j,k,l,m));
+        assert(estimora_trimmed_mean5_i32(i,j,k,l,m)==oracle(i,j,k,l,m));
     for(i=0;i<200000;++i){a=next_i32();b=next_i32();c=next_i32();d=next_i32();e=next_i32();
-        assert(pc_trimmed_mean5_i32(a,b,c,d,e)==oracle(a,b,c,d,e));}
+        assert(estimora_trimmed_mean5_i32(a,b,c,d,e)==oracle(a,b,c,d,e));}
     return 0;
 }

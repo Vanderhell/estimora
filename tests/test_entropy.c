@@ -1,7 +1,7 @@
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
-#include "pc_hist_entropy_norm_q.h"
+#include <estimora/statistics/hist_entropy_norm_q.h>
 #include <stddef.h>
 #include <assert.h>
 #include <math.h>
@@ -35,7 +35,7 @@ static long double exact_reference(void)
 static void compare(unsigned f)
 {
     uint32_t q = UINT32_MAX;
-    assert(pc_hist_entropy_norm_q(h, f, &q));
+    assert(estimora_hist_entropy_norm_q(h, f, &q));
     long double scale = ldexpl(1.0L, (int)f);
     long double value = (long double)q / scale;
     long double tolerance = 1.0L / 262144.0L + 0.5L / scale + 1.0e-12L;
@@ -58,19 +58,19 @@ static void compare(unsigned f)
 int main(void)
 {
     uint32_t out = UINT32_C(0xDEADBEEF);
-    assert(!pc_hist_entropy_norm_q(NULL, 15u, &out));
-    assert(!pc_hist_entropy_norm_q(h, 15u, NULL));
-    assert(!pc_hist_entropy_norm_q(h, 32u, &out));
+    assert(!estimora_hist_entropy_norm_q(NULL, 15u, &out));
+    assert(!estimora_hist_entropy_norm_q(h, 15u, NULL));
+    assert(!estimora_hist_entropy_norm_q(h, 32u, &out));
     assert(out == UINT32_C(0xDEADBEEF));
-    assert(!pc_hist_entropy_norm_q(h, 15u, &out));
+    assert(!estimora_hist_entropy_norm_q(h, 15u, &out));
     assert(out == UINT32_C(0xDEADBEEF));
 
     h[7] = UINT32_MAX;
     compare(31u);
-    assert(pc_hist_entropy_norm_q(h, 31u, &out) && out == 0u);
+    assert(estimora_hist_entropy_norm_q(h, 31u, &out) && out == 0u);
     for (size_t i = 0u; i < 256u; ++i) h[i] = 1u;
     compare(31u);
-    assert(pc_hist_entropy_norm_q(h, 31u, &out) && out == (UINT32_C(1) << 31u));
+    assert(estimora_hist_entropy_norm_q(h, 31u, &out) && out == (UINT32_C(1) << 31u));
 
     for (size_t k = 2u; k <= 256u; ++k) {
         for (size_t i = 0u; i < 256u; ++i) h[i] = (i < k) ? 1u : 0u;
@@ -80,10 +80,10 @@ int main(void)
     h[0] = 1u; h[128] = 2u; h[255] = 7u;
     compare(31u);
     uint32_t original;
-    assert(pc_hist_entropy_norm_q(h, 24u, &original));
+    assert(estimora_hist_entropy_norm_q(h, 24u, &original));
     for (size_t i = 0u; i < 256u; ++i) h[i] *= 100u;
     uint32_t scaled;
-    assert(pc_hist_entropy_norm_q(h, 24u, &scaled));
+    assert(estimora_hist_entropy_norm_q(h, 24u, &scaled));
     assert(original <= scaled + 2u && scaled <= original + 2u);
 
     for (size_t k = 0u; k < 2000u; ++k) {

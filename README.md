@@ -3,20 +3,36 @@
 
 ![Estimora banner](docs/banner.svg)
 
-Histograms, quantiles, entropy, medians and bounded sensor estimators.
+Estimora provides fixed-size histogram analysis, quantiles, entropy approximation, integer means and medians, and weighted sensor fusion for embedded C applications.
 
-## Why it exists
+## Design
 
-Small embedded systems need deterministic statistics over bounded integer data without heap allocation.
-
-## What is included
-
-- Portable C99-oriented implementation.
-- Deterministic integer or fixed-point behavior documented at function level.
-- No mandatory heap, threads or operating-system services.
-- Separate translation units for selective linking.
+- Portable ISO C99 public interface with fixed-width integer inputs where the operation requires them.
+- Deterministic results and documented overflow, invalid-input, rounding, aliasing, and output-preservation behavior.
+- No mandatory heap allocation, operating-system services, or external runtime libraries.
+- Separate implementation units for selective source integration and linking.
 
 ## Quick start
+
+```c
+#include <stdint.h>
+#include <estimora/statistics/histogram_total_u32.h>
+#include <estimora/statistics/mean4_i32.h>
+
+int main(void)
+{
+    const uint32_t bins[3] = { 2u, 5u, 3u };
+    uint32_t total = 0u;
+    if (!estimora_histogram_total_u32(bins, 3u, &total)) return 1;
+    return total == 10u && estimora_mean4_i32(-2, 1, 2, 5) == 2 ? 0 : 1;
+}
+```
+
+The public API consists of 19 functions under `include/estimora/statistics/`. See [API reference](docs/API_REFERENCE.md) for contracts and [family guide](docs/FAMILY_GUIDE.md) for operation selection.
+
+## CMake integration
+
+Build and run the opt-in tests:
 
 ```sh
 cmake -S . -B build -DESTIMORA_BUILD_TESTS=ON
@@ -24,32 +40,26 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-For a minimal integration, include only the required public header and compile the matching source unit.
+Install and consume the exported target:
 
-## Documentation
+```cmake
+find_package(Estimora CONFIG REQUIRED)
+target_link_libraries(app PRIVATE Estimora::Estimora)
+```
 
-| Need | Read |
-|---|---|
-| Choose a primitive | [Family guide](docs/FAMILY_GUIDE.md) |
-| Check every function and contract | [API reference](docs/API_REFERENCE.md) |
-| Reproduce tests and see validation limits | [Testing report](docs/TESTING.md) |
-| Review design and dependencies | [Architecture](docs/ARCHITECTURE.md) |
-| See measured or pending performance data | [Performance](docs/PERFORMANCE.md) |
-| Review source findings and API status | [Audit register](docs/AUDIT.md) |
+For source-tree integration, use `add_subdirectory(path/to/estimora)` and link `Estimora::Estimora`. Tests and examples are off by default for consumers.
 
-## At a glance
+## Direct source integration
 
-The public surface consists of 19 headers and 19 callable API entries under include/. Implementations are in src/ and tests are in tests/. State, buffers and output ownership are explicit in each header contract.
+Include the required header from `include/` and compile the corresponding `src/estimora_<operation>.c` translation unit. For example, `histogram_total_u32.h` pairs with `estimora_histogram_total_u32.c`. No global compiler flags are changed by the project CMake target.
 
-The CMake test option is ESTIMORA_BUILD_TESTS. The library has no mandatory third-party dependency. Platform-specific link requirements are documented in CMake and the affected API header.
+## Validation
 
-## Validation status
+The enabled suite directly calls all 19 public operations, includes fixed-seed differential and boundary checks, compiles each public header independently as C99, and compiles/links the complete public header set from C++. The exact host matrix, sanitizer status, hardware evidence and known limits are recorded in [Testing](docs/TESTING.md), [Audit](docs/AUDIT.md), and [Performance](docs/PERFORMANCE.md).
 
-All 19 public functions have direct deterministic tests. GCC, Clang and MSVC Debug/Release host builds passed 14/14 CTest targets per configuration. GCC ASan and UBSan checks are configured in GitHub Actions; their final remote results are recorded in the audit report.
+## Versioning
 
-ESP32-S3 validation firmware reported `ESTIMORA_ALL19_PASS`. The board revision, per-API cycle observations and clearly separated whole-firmware and library-object footprint are recorded in [Performance](docs/PERFORMANCE.md). Stack bounds remain unmeasured.
-
-Detailed overflow, rounding, invalid-input, memory-ownership and state rules are defined by the public headers and API reference. Do not infer them from the product name alone.
+Version 0.2.0 uses the `estimora_` public namespace and namespaced include paths. This is a source-level breaking change from 0.1.0; see [Changelog](CHANGELOG.md).
 
 ## License
 

@@ -1,7 +1,7 @@
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
-#include "pc_hist_equalize_u8.h"
+#include <estimora/statistics/hist_equalize_u8.h>
 #include <stddef.h>
 #include <assert.h>
 #include <stdint.h>
@@ -35,7 +35,7 @@ static void check_reference(const uint32_t h[256])
             cdf_min = h[i];
         }
     }
-    assert(pc_hist_equalize_u8(h, lut));
+    assert(estimora_hist_equalize_u8(h, lut));
     if (total == cdf_min) {
         for (size_t i = 0u; i < 256u; ++i) {
             assert(lut[i] == i);
@@ -93,12 +93,12 @@ int main(void)
     for (size_t i = 0u; i < 256u; ++i) histogram[i] = 0u;
     histogram[0] = UINT32_MAX; histogram[1] = 1u;
     for (size_t i = 0u; i < 256u; ++i) lut[i] = 0xA5u;
-    assert(!pc_hist_equalize_u8(histogram, lut));
+    assert(!estimora_hist_equalize_u8(histogram, lut));
     for (size_t i = 0u; i < 256u; ++i) assert(lut[i] == 0xA5u);
     for (size_t i = 0u; i < 256u; ++i) histogram[i] = 0u;
-    assert(!pc_hist_equalize_u8(histogram, lut));
+    assert(!estimora_hist_equalize_u8(histogram, lut));
     for (size_t i = 0u; i < 256u; ++i) assert(lut[i] == 0xA5u);
-    assert(!pc_hist_equalize_u8(NULL, lut));
-    assert(!pc_hist_equalize_u8(histogram, NULL));
+    assert(!estimora_hist_equalize_u8(NULL, lut));
+    assert(!estimora_hist_equalize_u8(histogram, NULL));
     return 0;
 }

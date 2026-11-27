@@ -1,7 +1,7 @@
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
-#include "pc_hist_low_percentile_u32.h"
+#include <estimora/statistics/hist_low_percentile_u32.h>
 #include <stddef.h>
 #include <assert.h>
 #include <stdint.h>
@@ -31,36 +31,36 @@ int main(void)
 {
     uint32_t bin = UINT32_C(0xDEADBEEF);
     for (size_t i = 0u; i < 256u; ++i) h[i] = 0u;
-    assert(!pc_hist_low_percentile_u32(h, 0u, &bin));
+    assert(!estimora_hist_low_percentile_u32(h, 0u, &bin));
     assert(bin == UINT32_C(0xDEADBEEF));
-    assert(!pc_hist_low_percentile_u32(h, 101u, &bin));
+    assert(!estimora_hist_low_percentile_u32(h, 101u, &bin));
     assert(bin == UINT32_C(0xDEADBEEF));
-    assert(!pc_hist_low_percentile_u32(NULL, 50u, &bin));
-    assert(!pc_hist_low_percentile_u32(h, 50u, NULL));
+    assert(!estimora_hist_low_percentile_u32(NULL, 50u, &bin));
+    assert(!estimora_hist_low_percentile_u32(h, 50u, NULL));
 
     h[7] = 1u; h[200] = 99u;
-    assert(pc_hist_low_percentile_u32(h, 0u, &bin) && bin == 7u);
-    assert(pc_hist_low_percentile_u32(h, 1u, &bin) && bin == 7u);
-    assert(pc_hist_low_percentile_u32(h, 2u, &bin) && bin == 200u);
-    assert(pc_hist_low_percentile_u32(h, 100u, &bin) && bin == 200u);
+    assert(estimora_hist_low_percentile_u32(h, 0u, &bin) && bin == 7u);
+    assert(estimora_hist_low_percentile_u32(h, 1u, &bin) && bin == 7u);
+    assert(estimora_hist_low_percentile_u32(h, 2u, &bin) && bin == 200u);
+    assert(estimora_hist_low_percentile_u32(h, 100u, &bin) && bin == 200u);
     uint32_t previous = 0u;
     for (uint32_t p = 0u; p <= 100u; ++p) {
-        assert(pc_hist_low_percentile_u32(h, p, &bin));
+        assert(estimora_hist_low_percentile_u32(h, p, &bin));
         assert(bin >= previous);
         previous = bin;
     }
 
     for (size_t i = 0u; i < 256u; ++i) h[i] = UINT32_MAX;
-    assert(pc_hist_low_percentile_u32(h, 100u, &bin) && bin == 255u);
+    assert(estimora_hist_low_percentile_u32(h, 100u, &bin) && bin == 255u);
     for (uint32_t p = 0u; p <= 100u; ++p) {
-        assert(pc_hist_low_percentile_u32(h, p, &bin));
+        assert(estimora_hist_low_percentile_u32(h, p, &bin));
         assert(bin == ref_percentile(p));
     }
 
     for (size_t k = 0u; k < 20000u; ++k) {
         uint32_t p = next_u32() % 101u;
         for (size_t i = 0u; i < 256u; ++i) h[i] = next_u32();
-        assert(pc_hist_low_percentile_u32(h, p, &bin));
+        assert(estimora_hist_low_percentile_u32(h, p, &bin));
         assert(bin == ref_percentile(p));
     }
     return 0;

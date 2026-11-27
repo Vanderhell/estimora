@@ -1,7 +1,7 @@
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
-#include "pc_hist_valley_count_u32.h"
+#include <estimora/statistics/hist_valley_count_u32.h>
 #include <stddef.h>
 #include <assert.h>
 #include <stdint.h>
@@ -30,7 +30,7 @@ static uint32_t reference(void)
 static void compare(void)
 {
     uint32_t got = UINT32_MAX;
-    assert(pc_hist_valley_count_u32(h, &got));
+    assert(estimora_hist_valley_count_u32(h, &got));
     assert(got == reference());
     assert(got <= 127u);
 }
@@ -38,9 +38,9 @@ static void compare(void)
 int main(void)
 {
     uint32_t out = UINT32_C(0xDEADBEEF);
-    assert(!pc_hist_valley_count_u32(NULL, &out));
+    assert(!estimora_hist_valley_count_u32(NULL, &out));
     assert(out == UINT32_C(0xDEADBEEF));
-    assert(!pc_hist_valley_count_u32(h, NULL));
+    assert(!estimora_hist_valley_count_u32(h, NULL));
     compare(); /* zero and constant histograms both have no valleys */
 
     /* Every interior position and plateau width; endpoints are not counted. */

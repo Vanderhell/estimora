@@ -1,7 +1,7 @@
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
-#include "pc_hist_clip_redistribute_u32.h"
+#include <estimora/statistics/hist_clip_redistribute_u32.h>
 #include <stddef.h>
 #include <assert.h>
 #include <stdint.h>
@@ -20,7 +20,7 @@ static void verify(uint32_t limit)
     uint64_t total = 0u, excess = 0u, got = 0u;
     uint64_t batch;
     uint32_t residual;
-    assert(pc_hist_clip_redistribute_u32(h, limit, out));
+    assert(estimora_hist_clip_redistribute_u32(h, limit, out));
     for (size_t i = 0u; i < 256u; ++i) {
         total += h[i];
         if (h[i] > limit) excess += (uint64_t)(h[i] - limit);
@@ -44,10 +44,10 @@ int main(void)
         out[i] = 0xA5A5A5A5u;
         sentinel[i] = out[i];
     }
-    assert(!pc_hist_clip_redistribute_u32(h, 0u, out));
+    assert(!estimora_hist_clip_redistribute_u32(h, 0u, out));
     for (size_t i = 0u; i < 256u; ++i) assert(out[i] == sentinel[i]);
-    assert(!pc_hist_clip_redistribute_u32(NULL, 1u, out));
-    assert(!pc_hist_clip_redistribute_u32(h, 1u, NULL));
+    assert(!estimora_hist_clip_redistribute_u32(NULL, 1u, out));
+    assert(!estimora_hist_clip_redistribute_u32(h, 1u, NULL));
 
     verify(UINT32_MAX);
     verify(UINT32_MAX - 1u);
@@ -57,7 +57,7 @@ int main(void)
     verify(1u);
     assert(out[0] == 2u && out[98] == 1u && out[99] == 0u);
     for (size_t i = 0u; i < 256u; ++i) h[i] = UINT32_MAX;
-    assert(pc_hist_clip_redistribute_u32(h, UINT32_MAX - 1u, h));
+    assert(estimora_hist_clip_redistribute_u32(h, UINT32_MAX - 1u, h));
     for (size_t i = 0u; i < 256u; ++i) assert(h[i] == UINT32_MAX);
 
     for (size_t k = 0u; k < 20000u; ++k) {

@@ -1,7 +1,7 @@
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
-#include "pc_hist_dynamic_range_u32.h"
+#include <estimora/statistics/hist_dynamic_range_u32.h>
 #include <stddef.h>
 #include <assert.h>
 #include <stdint.h>
@@ -18,9 +18,9 @@ static uint32_t next_u32(void)
 int main(void)
 {
     uint32_t range = UINT32_C(0xDEADBEEF);
-    assert(!pc_hist_dynamic_range_u32(NULL, &range));
-    assert(!pc_hist_dynamic_range_u32(h, NULL));
-    assert(!pc_hist_dynamic_range_u32(h, &range));
+    assert(!estimora_hist_dynamic_range_u32(NULL, &range));
+    assert(!estimora_hist_dynamic_range_u32(h, NULL));
+    assert(!estimora_hist_dynamic_range_u32(h, &range));
     assert(range == UINT32_C(0xDEADBEEF));
 
     for (size_t low = 0u; low < 256u; ++low) {
@@ -28,7 +28,7 @@ int main(void)
             for (size_t i = 0u; i < 256u; ++i) h[i] = 0u;
             h[low] = UINT32_MAX;
             h[high] = UINT32_MAX;
-            assert(pc_hist_dynamic_range_u32(h, &range));
+            assert(estimora_hist_dynamic_range_u32(h, &range));
             assert(range == high - low);
         }
     }
@@ -38,7 +38,7 @@ int main(void)
         if (low > high) { size_t t = low; low = high; high = t; }
         h[low] = next_u32() | 1u;
         h[high] = next_u32() | 1u;
-        assert(pc_hist_dynamic_range_u32(h, &range));
+        assert(estimora_hist_dynamic_range_u32(h, &range));
         assert(range == high - low);
     }
     return 0;
