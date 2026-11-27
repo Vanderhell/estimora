@@ -61,10 +61,15 @@ The renamed sketch compiled locally against Arduino ESP32 core 3.3.10, but was n
 
 GCC AddressSanitizer and UndefinedBehaviorSanitizer jobs are configured in `.github/workflows/ci.yml` on Ubuntu 24.04. Local sanitizer execution on the Windows host was **NOT RUN**: its installed MinGW GCC has no `libasan` or `libubsan`, the installed Clang has no Windows sanitizer runtimes, and WSL is unavailable in this environment. The hosted run for the productization commit is recorded below once all jobs for that exact revision have completed.
 
-| Remote workflow check | Result |
+| Remote workflow check | Result on source commit `e09b3f1` |
 |---|---|
-| GCC Debug / Release | Awaiting exact post-push run |
-| Clang Debug / Release | Awaiting exact post-push run |
-| MSVC Debug / Release | Awaiting exact post-push run |
-| GCC ASan | Awaiting exact post-push run |
-| GCC UBSan | Awaiting exact post-push run |
+| GCC Debug | PASS, 37/37 |
+| GCC Release | PASS, 37/37 |
+| Clang Debug | PASS, 37/37 |
+| Clang Release | PASS, 37/37 |
+| MSVC Debug | PASS, 37/37 |
+| MSVC Release | PASS, 37/37 |
+| GCC AddressSanitizer | PASS |
+| GCC UndefinedBehaviorSanitizer | PASS |
+
+GitHub Actions run [46084904265](https://github.com/Vanderhell/estimora/actions/runs/46084904265) completed success with all 8/8 jobs green on commit `e09b3f13579bd1da743a0c83c8b9996a6bb9dee7`. This is the source-validation commit; a later documentation-only update does not alter code or build configuration.

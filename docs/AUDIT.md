@@ -19,6 +19,8 @@ All 19 public callable functions were inspected and have direct deterministic co
 
 The public namespace and header migration did not alter production algorithms. Current product-source comparisons and test evidence are reflected in the repository history and the test register.
 
+The exact hosted validation for source commit `e09b3f13579bd1da743a0c83c8b9996a6bb9dee7` is GitHub Actions run [46084904265](https://github.com/Vanderhell/estimora/actions/runs/46084904265): all eight GCC, Clang, MSVC, ASan, and UBSan jobs passed. The per-configuration test results are in [Testing](TESTING.md).
+
 ## API register
 
 | Public function | Status | Principal checks |
